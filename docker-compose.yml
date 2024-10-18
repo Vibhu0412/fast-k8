@@ -1,0 +1,36 @@
+  version: '3.8'
+
+  services:
+    web:
+      build: .
+      command: /app/entrypoint.sh
+      volumes:
+        - .:/app
+      ports:
+        - "5001:5001"
+      depends_on:
+        - db
+      environment:
+        FLASK_APP: app
+        FLASK_ENV: development
+        PORT: 5001
+        API_ENDPOINT_ACCESS_TOKEN: None
+        FIGMA_TOKEN: figd_kvaFCNOz2o00C7zQs_XnV4fkw9yHd0DG8n2xOhGR
+        DB_CONNECTION: postgresql
+        DB_HOST: db  # Change to 'localhost' if not using Docker Compose
+        DB_PORT: 5432
+        DB_DATABASE: book_db_fastapi
+        DB_USERNAME: postgres
+        DB_PASSWORD: root
+
+    db:
+      image: postgres:13
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: root
+        POSTGRES_DB: book_db_fastapi
+      volumes:
+        - pgdata:/var/lib/postgresql/data
+
+  volumes:
+    pgdata:

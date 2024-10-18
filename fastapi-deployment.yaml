@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi
+  template:
+    metadata:
+      labels:
+        app: fastapi
+    spec:
+      containers:
+      - name: fastapi
+        image: sanyogtecblic/fastapi-app:latest
+        env:
+        - name: FLASK_APP
+          valueFrom:
+            configMapKeyRef:
+              name: fastapi-config
+              key: FLASK_APP
+        - name: FLASK_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: fastapi-config
+              key: FLASK_ENV
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: fastapi-config
+              key: PORT
+        - name: API_ENDPOINT_ACCESS_TOKEN
+          valueFrom:
+            configMapKeyRef:
+              name: fastapi-config
+              key: API_ENDPOINT_ACCESS_TOKEN
+        - name: FIGMA_TOKEN
+          valueFrom:
+            configMapKeyRef:
+              name: fastapi-config
+              key: FIGMA_TOKEN
+        - name: DB_CONNECTION
+          value: postgresql
+        - name: DB_HOST
+          value: postgres
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_DATABASE
+          value: book_db_fastapi
+        - name: DB_USERNAME
+          value: postgres
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: fastapi-secret
+              key: DB_PASSWORD
+        ports:
+        - containerPort: 5001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi
+spec:
+  type: ClusterIP
+  ports:
+  - port: 5001
+    targetPort: 5001
+  selector:
+    app: fastapi

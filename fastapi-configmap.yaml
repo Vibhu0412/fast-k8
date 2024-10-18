@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fastapi-config
+data:
+  FLASK_APP: app
+  FLASK_ENV: development
+  PORT: "5001"
+  API_ENDPOINT_ACCESS_TOKEN: None
+  FIGMA_TOKEN: figd_kvaFCNOz2o00C7zQs_XnV4fkw9yHd0DG8n2xOhGR
